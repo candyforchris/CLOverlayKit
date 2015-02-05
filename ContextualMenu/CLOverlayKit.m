@@ -12,12 +12,11 @@
 
 @property (nonatomic, strong) UIView *panelView;
 @property (nonatomic, strong) UIView *tintView;
-@property (nonatomic, strong) NSString *descriptionHeaderString;
-@property (nonatomic, readwrite) EquatorPosition equatorPosition;
-@property (nonatomic, readwrite) HorizontalPosition horizontalPosition;
-@property (nonatomic, readwrite) CLOverlayAppearance appearance;
 @property (nonatomic, readwrite) CGPoint touchPoint;
-@property (nonatomic, readwrite) OverlayFormat format;
+@property (nonatomic, readwrite) CLEquatorPosition equatorPosition;
+@property (nonatomic, readwrite) CLHorizontalPosition horizontalPosition;
+@property (nonatomic, readwrite) CLOverlayAppearance appearance;
+@property (nonatomic, readwrite) CLOverlayFormat format;
 @end
 
 @implementation CLOverlayKit
@@ -35,15 +34,14 @@
     [menuOverlay animateOverlayAppearance];
 }
 
-+(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint text:(NSString*)text appearance:(CLOverlayAppearance)appearance {
++(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance)appearance {
     
     CLOverlayKit *descriptionOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
     
-    [descriptionOverlay extractHeaderStringFromSelectedObjectInView:view];
     descriptionOverlay.format = DescriptionOverlay;
     
     [descriptionOverlay applyTintToSuperview];
-    [descriptionOverlay composeDescriptionPanelWithText:text];
+    [descriptionOverlay composeDescriptionPanelWithBodyString:bodyString andHeaderString:headerString];
     [descriptionOverlay animateOverlayAppearance];
 }
 
@@ -145,7 +143,7 @@
     [self composeButtonListFromStrings:strings inPanelView:panelView];
 }
 
--(void)composeDescriptionPanelWithText:(NSString*)text {
+-(void)composeDescriptionPanelWithBodyString:(NSString*)text andHeaderString:(NSString *)headerString{
     
     //Compose panel view
     UIView *panelView = [self composePanelViewWithSize:CGSizeMake(_appearance.panelWidth, _appearance.contentHeight*7)];
@@ -156,7 +154,7 @@
     
     UILabel *headerLabel; {
         headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, panelView.frame.size.width, _appearance.contentHeight)];
-        headerLabel.text = _descriptionHeaderString;
+        headerLabel.text = headerString;
         headerLabel.textAlignment = NSTextAlignmentCenter;
         headerLabel.font = [UIFont systemFontOfSize:headerLabel.bounds.size.height*.45];
         [panelView addSubview:headerLabel];
@@ -199,7 +197,7 @@
         //Add tint to screenshot
         UIView *screenshotTintView; {
             screenshotTintView = [[UIView alloc] initWithFrame:screenshot.bounds];
-            screenshotTintView.backgroundColor = [UIColor colorWithCGColor:_appearance.tintColor];
+            screenshotTintView.backgroundColor = [[UIColor colorWithCGColor:_appearance.tintColor] colorWithAlphaComponent:TINT_ALPHA];
             [screenshot addSubview:screenshotTintView];
         }
     }
@@ -227,41 +225,9 @@
 -(void)applyTintToSuperview {
     
     _tintView = [[UIView alloc] initWithFrame:self.superview.frame];
-    _tintView.backgroundColor = [UIColor colorWithCGColor:_appearance.tintColor];
+    _tintView.backgroundColor = [[UIColor colorWithCGColor:_appearance.tintColor] colorWithAlphaComponent:TINT_ALPHA];
     _tintView.alpha = 0;
     [self.superview insertSubview:_tintView belowSubview:self];
-}
-
-#pragma mark - Convenience Methods
-
--(void)extractHeaderStringFromSelectedObjectInView:(UIView *)view {
-    
-    NSObject *object;
-    
-    //Iterate through objects in the view and find those that inherit from 'UIView'
-    for (object in view.subviews) if ([object isKindOfClass:[UIView class]]) {
-        
-        NSLog(@"FOUND AN OBJECT THAT INHERITS FROM UIVIEW");
-        
-        //Evaluate object to determine whether or not it contains our 'touchPoint'
-        if (CGRectContainsPoint([(UIView *)object frame], _touchPoint)) {
-        
-            NSLog(@"FOUND AN OBJECT THAT CONTAINS THE TOUCHPOINT");
-            
-            //If the object is an instance of UIView, it is likey a container view
-            if ([(UIView *)object subviews].count) [self extractHeaderStringFromSelectedObjectInView:(UIView *)object];
-            
-            //Evaluate object to see if a string can be extracted
-            else {
-                if ([object isMemberOfClass:[UIButton class]]) _descriptionHeaderString = [(UIButton *)object titleLabel].text;
-                else if ([object isMemberOfClass:[UILabel class]]) _descriptionHeaderString = [(UILabel *)object text];
-                else if ([object isMemberOfClass:[UITextView class]]) _descriptionHeaderString = [(UITextView *)object text];
-                else if ([object isMemberOfClass:[UITextField class]]) _descriptionHeaderString = [(UITextField *)object text];
-                
-                NSLog(@"HEADER STRING: %@", _descriptionHeaderString);
-            }
-        }
-    }
 }
 
 #pragma mark - Animation
@@ -294,6 +260,7 @@
         _panelView.center   = sideMenuDestination;
         screenshotTintView.alpha = 1;
     } completion:^(BOOL finished) {
+        if (self.delegate) [self.delegate overlayKit:self didFinishPresentingWithFormat:_format];
     }];
 }
 
@@ -314,6 +281,7 @@
         _panelView.frame = CGRectMake(panelDestinationX, 0, _panelView.bounds.size.width, _panelView.bounds.size.height);
         screenshotTintView.alpha = 0;
     } completion:^(BOOL finished) {
+        if (self.delegate) [self.delegate overlayDidDismissWithFormat:_format];
         [self removeFromSuperview];
     }];
 }
@@ -329,7 +297,7 @@
         self.alpha      = 1;
         _tintView.alpha = 1;
     } completion:^(BOOL finished) {
-        //...
+        if (self.delegate) [self.delegate overlayKit:self didFinishPresentingWithFormat:_format];
     }];
 }
 
@@ -344,6 +312,7 @@
             _tintView.alpha = 0;
         } completion:^(BOOL finished) {
             [_tintView removeFromSuperview];
+            if (self.delegate) [self.delegate overlayDidDismissWithFormat:_format];
             [self removeFromSuperview];
         }];
     }
@@ -352,7 +321,7 @@
 #pragma mark - Target Method(s)
 
 -(void)onTapMenuItem:(id)sender {
-    if (self.delegate) [self.delegate didSelectMenuItemAtIndex:[(UIView *)sender tag]];
+    if (self.delegate) [self.delegate overlayKit:self itemSelectedAtIndex:[(UIView *)sender tag]];
 }
 
 #pragma mark - User Interaction
