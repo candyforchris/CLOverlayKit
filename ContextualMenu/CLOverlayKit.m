@@ -12,10 +12,10 @@
 
 @property (nonatomic, strong) UIView *panelView;
 @property (nonatomic, strong) UIView *tintView;
+@property (nonatomic, weak) CLOverlayAppearance *appearance;
 @property (nonatomic, readwrite) CGPoint touchPoint;
 @property (nonatomic, readwrite) CLEquatorPosition equatorPosition;
 @property (nonatomic, readwrite) CLHorizontalPosition horizontalPosition;
-@property (nonatomic, readwrite) CLOverlayAppearance appearance;
 @property (nonatomic, readwrite) CLOverlayFormat format;
 @end
 
@@ -23,8 +23,10 @@
 
 #pragma mark - API Methods
 
-+(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance)appearance {
++(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
+    NSLog(@"HELLO: %f", appearance.contentHeight);
+
     CLOverlayKit *menuOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
 
     menuOverlay.format = MenuOverlay;
@@ -34,7 +36,7 @@
     [menuOverlay animateOverlayAppearance];
 }
 
-+(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance)appearance {
++(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *descriptionOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
     
@@ -45,7 +47,7 @@
     [descriptionOverlay animateOverlayAppearance];
 }
 
-+(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance)appearance {
++(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *sideMenu = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
     
@@ -57,7 +59,8 @@
 
 #pragma mark - UI Composition
 
-+(CLOverlayKit *)newContextualOverlayInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint appearance:(CLOverlayAppearance)appearance {
++(CLOverlayKit *)newContextualOverlayInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint appearance:(CLOverlayAppearance *)appearance {
+    NSLog(@"HELLO: %f", appearance.contentHeight);
     
     CLOverlayKit *overlay; {
         
@@ -87,7 +90,7 @@
         UIButton *button; {
             button = [[UIButton alloc] initWithFrame:(CGRect){0,verticalOffset, buttonSize}];
             [button setTitle:[strings objectAtIndex:index] forState:UIControlStateNormal];
-            [button setTitleColor:[UIColor colorWithCGColor:self.appearance.textColor] forState:UIControlStateNormal];
+            [button setTitleColor:self.appearance.textColor forState:UIControlStateNormal];
             [button addTarget:self action:@selector(onTapMenuItem:) forControlEvents:UIControlEventTouchUpInside];
             button.titleLabel.font = [UIFont systemFontOfSize:button.frame.size.height*.35];
             button.tag = index;
@@ -109,7 +112,7 @@
         
         partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-_appearance.partitionLineThickness, view.frame.size.width*.9, _appearance.partitionLineThickness)];
         partitionLine.center = CGPointMake(view.center.x, partitionLine.center.y);
-        partitionLine.backgroundColor = [[UIColor colorWithCGColor:self.appearance.textColor] colorWithAlphaComponent:.75];
+        partitionLine.backgroundColor = [self.appearance.textColor colorWithAlphaComponent:.75];
         [view addSubview:partitionLine];
     }
 }
@@ -123,10 +126,10 @@
     panelView                       = [[UIView alloc] initWithFrame:(CGRect){0,0, panelSize}];
     panelView.center                = _touchPoint;
     panelView.frame                 = [self adjustFrameForPosition:panelView.frame];
-    panelView.backgroundColor       = [UIColor colorWithCGColor:_appearance.panelColor];
+    panelView.backgroundColor       = _appearance.panelColor;
     panelView.layer.cornerRadius    = _appearance.cornerRadius;
     panelView.layer.borderWidth     = _appearance.borderWidth;
-    panelView.layer.borderColor     = _appearance.textColor;
+    panelView.layer.borderColor     = _appearance.textColor.CGColor;
         
     return panelView;
 }
@@ -171,7 +174,7 @@
             CGRect frame = CGRectMake(descriptionContainerView.bounds.size.width*.05, 0, descriptionContainerView.bounds.size.width*.9, descriptionContainerView.bounds.size.height);
             descriptionLabel                = [[UILabel alloc] initWithFrame:frame];
             descriptionLabel.text           = text;
-            descriptionLabel.textColor      = [UIColor colorWithCGColor:self.appearance.textColor];
+            descriptionLabel.textColor      = _appearance.textColor;
             descriptionLabel.numberOfLines  = 0;
             [descriptionLabel sizeThatFits:descriptionContainerView.frame.size];
             [descriptionLabel setAdjustsFontSizeToFitWidth:YES];
@@ -197,7 +200,7 @@
         //Add tint to screenshot
         UIView *screenshotTintView; {
             screenshotTintView = [[UIView alloc] initWithFrame:screenshot.bounds];
-            screenshotTintView.backgroundColor = [[UIColor colorWithCGColor:_appearance.tintColor] colorWithAlphaComponent:TINT_ALPHA];
+            screenshotTintView.backgroundColor = [_appearance.tintColor colorWithAlphaComponent:TINT_ALPHA];
             [screenshot addSubview:screenshotTintView];
         }
     }
@@ -206,7 +209,7 @@
     UIView *panelView; {
         CGFloat xPosition = (_horizontalPosition) ? self.frame.size.width-_appearance.panelWidth : 0;
         panelView = [[UIView alloc] initWithFrame:CGRectMake(xPosition, 0, _appearance.panelWidth, self.bounds.size.height)];
-        panelView.backgroundColor = [UIColor colorWithCGColor:_appearance.panelColor];
+        panelView.backgroundColor = _appearance.panelColor;
         [self addSubview:panelView];
         
         //Retain strong reference to panel view object
@@ -225,7 +228,7 @@
 -(void)applyTintToSuperview {
     
     _tintView = [[UIView alloc] initWithFrame:self.superview.frame];
-    _tintView.backgroundColor = [[UIColor colorWithCGColor:_appearance.tintColor] colorWithAlphaComponent:TINT_ALPHA];
+    _tintView.backgroundColor = [_appearance.tintColor colorWithAlphaComponent:TINT_ALPHA];
     _tintView.alpha = 0;
     [self.superview insertSubview:_tintView belowSubview:self];
 }
@@ -371,8 +374,22 @@
     [arrowPath moveToPoint: CGPointMake(self.panelView.center.x+_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset)];
     [arrowPath addLineToPoint: self.touchPoint];
     [arrowPath addLineToPoint: CGPointMake(self.panelView.center.x-_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset)];
-    [[UIColor colorWithCGColor:(_appearance.borderWidth) ? self.appearance.textColor : self.appearance.panelColor] setFill];
+    [(_appearance.borderWidth) ? self.appearance.textColor : self.appearance.panelColor setFill];
     [arrowPath fill];
+}
+
+@end
+
+@implementation CLOverlayAppearance
+
+-(instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        
+    }
+    
+    return self;
 }
 
 @end

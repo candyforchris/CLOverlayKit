@@ -12,21 +12,14 @@
 #define SIDE_MENU_ANIMATION_SPEED .25
 #define OVERLAY_ANIMATION_SPEED .5
 
-
 @class CLOverlayKit;
+@class CLOverlayAppearance;
 
 ///Type Definitions
 
 typedef NS_ENUM(BOOL, CLEquatorPosition) {AboveEquator, BelowEquator};
 typedef NS_ENUM(BOOL, CLHorizontalPosition) {LeftOfCenter, RightOfCenter};
 typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionOverlay};
-
-typedef struct
-{
-    CGColorRef panelColor, textColor, tintColor;
-    CGFloat panelWidth, contentHeight;
-    CGFloat cornerRadius, borderWidth, partitionLineThickness, arrowWidth;
-} CLOverlayAppearance;
 
 ///Protocol Definition
 
@@ -37,16 +30,16 @@ typedef struct
 - (void)overlayDidDismissWithFormat:(CLOverlayFormat)format;
 @end
 
+///Class Definitions
+
 @interface CLOverlayKit : UIView
-
 @property (nonatomic, weak) id<CLOverlayKitDelegate>delegate;
++(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
++(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
++(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
+@end
 
-///API Methods
-
-+(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance)appearance;
-
-+(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance)appearance;
-
-+(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance)appearance;
-
+@interface CLOverlayAppearance : NSObject
+@property (nonatomic, readwrite) CGFloat panelWidth, contentHeight, cornerRadius, borderWidth, partitionLineThickness, arrowWidth;
+@property (nonatomic, strong)UIColor *panelColor, *textColor, *tintColor;
 @end

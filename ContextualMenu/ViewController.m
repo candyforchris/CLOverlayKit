@@ -8,9 +8,11 @@
 #import "ViewController.h"
 #import "CLOverlayKit.h"
 
-@interface ViewController () <CLOverlayKitDelegate> {
-    CLOverlayAppearance appearance;
-}
+#define CORNER_RADIUS 8
+#define PRIMARY_CGCOLOR CGColorCreateGenericRGB(0.000, 0.255, 0.494, 1)
+
+@interface ViewController () <CLOverlayKitDelegate>
+@property (nonatomic, strong) CLOverlayAppearance *appearance;
 @end
 
 
@@ -20,17 +22,20 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    appearance.borderWidth              = 0;
-    appearance.cornerRadius             = 0;
-    appearance.contentHeight            = self.view.bounds.size.height*.08;
-    appearance.panelColor               = [UIColor yellowColor].CGColor;
-    appearance.panelWidth               = self.view.bounds.size.width*.5;
-    appearance.textColor                = [UIColor blackColor].CGColor;
-    appearance.arrowWidth               = self.view.bounds.size.width*.08;
-    appearance.partitionLineThickness   = 1;
-    appearance.tintColor                = [UIColor blackColor].CGColor;
+    _appearance = [CLOverlayAppearance new];
     
+    _appearance.borderWidth = 0;
+    _appearance.cornerRadius = CORNER_RADIUS;
+    _appearance.contentHeight = self.view.bounds.size.height*.08;
+    _appearance.panelColor = [UIColor yellowColor];
+    _appearance.panelWidth = self.view.bounds.size.width*.5;
+    _appearance.textColor = [UIColor blackColor];
+    _appearance.arrowWidth = self.view.bounds.size.width*.08;
+    _appearance.partitionLineThickness = 1;
+    _appearance.tintColor = [UIColor blackColor];
     
+    NSLog(@"HELLO: %f", _appearance.contentHeight);
+
     [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
     [self composeInterface];
 }
@@ -49,16 +54,16 @@
                                                   touchPoint:touchPoint
                                                   bodyString:@"Bacon ipsum dolor amet kielbasa tail salami shankle picanha bresaola brisket pancetta. Bresaola filet mignon meatloaf pastrami. Tenderloin venison bresaola shoulder. Spare ribs pancetta pork loin swine, picanha capicola doner alcatra rump hamburger cupim meatball. Ham short loin fatback, ham hock prosciutto ground round swine beef ribs strip steak cow turkey t-bone alcatra. Frankfurter flank pork loin ball tip pork short loin, ribeye boudin landjaeger leberkas biltong salami hamburger shankle sirloin. Ribeye t-bone shank pork belly turkey rump. Shoulder meatloaf t-bone kielbasa, pancetta shankle corned beef sausage drumstick. Chicken turducken shoulder, corned beef chuck sausage kielbasa rump ham hock short loin andouille tenderloin pancetta sirloin. Meatloaf beef ball tip turkey meatball rump."
                                                 headerString:@"Privacy Policy"
-                                                  appearance:appearance];
+                                                  appearance:_appearance];
             
             break;
             
         case 2:
-            [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"] appearance: appearance];
+            [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"] appearance: _appearance];
             break;
             
         case 3:
-            [CLOverlayKit presentSideMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"] appearance:appearance];
+            [CLOverlayKit presentSideMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"] appearance:_appearance];
             
             break;
     }
@@ -88,7 +93,7 @@
 
 -(void)composeInterface {
     
-    CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.1);
+    CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.075);
     CGSize buttonSize = CGSizeMake(navigationBarSize.width*.25, navigationBarSize.height);
     
     //Compose the top navigtion bar
@@ -129,10 +134,14 @@
     //Compose new button
     UIButton *styledButton; {
         styledButton = [[UIButton  alloc] initWithFrame:frame];
-        styledButton.backgroundColor = [UIColor clearColor];
+        styledButton.backgroundColor = [UIColor yellowColor];
         styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.25];
         [styledButton setTitle:title forState:UIControlStateNormal];
-        [styledButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+        [styledButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        styledButton.layer.cornerRadius = CORNER_RADIUS;
+        styledButton.clipsToBounds = YES;
+        styledButton.transform = CGAffineTransformMakeScale(.8, .8);
+        
     }
     
     //Add a target to the new button
