@@ -111,7 +111,7 @@
         
         partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-_appearance.partitionLineThickness, view.frame.size.width*.9, _appearance.partitionLineThickness)];
         partitionLine.center = CGPointMake(view.center.x, partitionLine.center.y);
-        partitionLine.backgroundColor = [self.appearance.textColor colorWithAlphaComponent:.75];
+        partitionLine.backgroundColor = [self.appearance.textColor colorWithAlphaComponent:.25];
         [view addSubview:partitionLine];
     }
 }
@@ -334,7 +334,7 @@
     [self animateOverlayDismissal];
 }
 
-#pragma mark - Convenience Function(s)
+#pragma mark - Convenience Method(s)
 
 -(CGRect)adjustFrameForPosition:(CGRect)frame
 {
@@ -363,17 +363,27 @@
     return image;
 }
 
+#pragma mark - Drawing
+
 - (void)drawRect:(CGRect)rect {
     
     //Do not draw arrow if overlay is a side menu
     if (_format == SideMenu) return;
     
+    //Calulate points to be used in the triangle drawing
     CGFloat verticalOffset = (_equatorPosition) ? 1 : self.panelView.bounds.size.height-1;
+    CGPoint leftPoint = CGPointMake(self.panelView.center.x+_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset);
+    CGPoint rightPoint = CGPointMake(self.panelView.center.x-_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset);
     
+    //Adjust points for excessive angle cases
+    if (_touchPoint.x > leftPoint.x) leftPoint.y = _panelView.center.y;
+    else if (_touchPoint.x < rightPoint.x) rightPoint.y = _panelView.center.y;
+    
+    //Draw arrow Bezier Path
     UIBezierPath* arrowPath = UIBezierPath.bezierPath;
-    [arrowPath moveToPoint: CGPointMake(self.panelView.center.x+_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset)];
-    [arrowPath addLineToPoint: self.touchPoint];
-    [arrowPath addLineToPoint: CGPointMake(self.panelView.center.x-_appearance.arrowWidth, self.panelView.frame.origin.y+verticalOffset)];
+    [arrowPath moveToPoint: leftPoint];
+    [arrowPath addLineToPoint: _touchPoint];
+    [arrowPath addLineToPoint: rightPoint];
     [(_appearance.borderWidth) ? self.appearance.textColor : self.appearance.panelColor setFill];
     [arrowPath fill];
 }

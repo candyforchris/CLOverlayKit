@@ -8,7 +8,7 @@
 #import "ViewController.h"
 #import "CLOverlayKit.h"
 
-#define CORNER_RADIUS 4
+#define CORNER_RADIUS 10
 #define PRIMARY_COLOR [UIColor colorWithRed:0.043 green:0.349 blue:0.624 alpha:1]
 
 @interface ViewController () <CLOverlayKitDelegate>
@@ -24,15 +24,15 @@
     
     _appearance = [CLOverlayAppearance new];
     
-    _appearance.borderWidth = 0;
+    _appearance.borderWidth = 3;
     _appearance.cornerRadius = CORNER_RADIUS;
     _appearance.contentHeight = self.view.bounds.size.height*.08;
     _appearance.panelColor = PRIMARY_COLOR;
     _appearance.panelWidth = self.view.bounds.size.width*.6;
     _appearance.textColor = [UIColor whiteColor];
-    _appearance.arrowWidth = self.view.bounds.size.width*.1;
+    _appearance.arrowWidth = self.view.bounds.size.width*.05;
     _appearance.partitionLineThickness = 1;
-    _appearance.tintColor = [UIColor whiteColor];
+    _appearance.tintColor = [UIColor blackColor];
     
     [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
     
@@ -125,6 +125,14 @@
             aboutUsButton.tag = 2;
             [bottomNavigationBar addSubview:aboutUsButton];
         }
+    }
+    
+    //Compose middle button
+    UIButton *middleButton; {
+        middleButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Middle"];
+        middleButton.tag = 2;
+        middleButton.center = self.view.center;
+        [self.view addSubview:middleButton];
     }
 }
 
