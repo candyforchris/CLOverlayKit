@@ -29,10 +29,11 @@
     _appearance.contentHeight = self.view.bounds.size.height*.08;
     _appearance.panelColor = PRIMARY_COLOR;
     _appearance.panelWidth = self.view.bounds.size.width*.6;
-    _appearance.textColor = [UIColor whiteColor];
+    _appearance.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
     _appearance.arrowWidth = self.view.bounds.size.width*.05;
-    _appearance.partitionLineThickness = 1;
-    _appearance.tintColor = [UIColor blackColor];
+    _appearance.partitionLineThickness = 2;
+    _appearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.7];
+    _appearance.accentColor = [UIColor colorWithRed:0.282 green:0.510 blue:0.718 alpha:1];
     
     [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
     

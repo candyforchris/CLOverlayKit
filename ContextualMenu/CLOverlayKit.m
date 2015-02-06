@@ -27,7 +27,7 @@
 
 +(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
-    CLOverlayKit *menuOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
+    CLOverlayKit *menuOverlay = [CLOverlayKit newOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
 
     menuOverlay.format = MenuOverlay;
     
@@ -38,7 +38,7 @@
 
 +(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance {
     
-    CLOverlayKit *descriptionOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
+    CLOverlayKit *descriptionOverlay = [CLOverlayKit newOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
     
     descriptionOverlay.format = DescriptionOverlay;
     
@@ -49,7 +49,7 @@
 
 +(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
-    CLOverlayKit *sideMenu = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
+    CLOverlayKit *sideMenu = [CLOverlayKit newOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
     
     sideMenu.format = SideMenu;
     
@@ -57,9 +57,16 @@
     [sideMenu animateSideMenuAppearance];
 }
 
++(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
+#warning METHOD IN PROGRESS
+    CLOverlayKit *notification = [CLOverlayKit newOverlayInView:view delegate:delegate touchPoint:CGPointZero appearance:appearance];
+    notification.format = PopupOverlay;
+    [notification animateOverlayAppearance];
+}
+
 #pragma mark - UI Composition
 
-+(CLOverlayKit *)newContextualOverlayInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint appearance:(CLOverlayAppearance *)appearance {
++(CLOverlayKit *)newOverlayInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *overlay; {
         
@@ -111,7 +118,7 @@
         
         partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-_appearance.partitionLineThickness, view.frame.size.width*.9, _appearance.partitionLineThickness)];
         partitionLine.center = CGPointMake(view.center.x, partitionLine.center.y);
-        partitionLine.backgroundColor = [self.appearance.textColor colorWithAlphaComponent:.25];
+        partitionLine.backgroundColor = _appearance.accentColor;
         [view addSubview:partitionLine];
     }
 }
@@ -128,7 +135,7 @@
     panelView.backgroundColor       = _appearance.panelColor;
     panelView.layer.cornerRadius    = _appearance.cornerRadius;
     panelView.layer.borderWidth     = _appearance.borderWidth;
-    panelView.layer.borderColor     = _appearance.textColor.CGColor;
+    panelView.layer.borderColor     = _appearance.accentColor.CGColor;
         
     return panelView;
 }
@@ -200,7 +207,7 @@
         //Add tint to screenshot
         UIView *screenshotTintView; {
             screenshotTintView = [[UIView alloc] initWithFrame:screenshot.bounds];
-            screenshotTintView.backgroundColor = [_appearance.tintColor colorWithAlphaComponent:TINT_ALPHA];
+            screenshotTintView.backgroundColor = _appearance.tintColor;
             [screenshot addSubview:screenshotTintView];
         }
     }
@@ -228,7 +235,7 @@
 -(void)applyTintToSuperview {
     
     _tintView = [[UIView alloc] initWithFrame:self.superview.frame];
-    _tintView.backgroundColor = [_appearance.tintColor colorWithAlphaComponent:TINT_ALPHA];
+    _tintView.backgroundColor = _appearance.tintColor;
     _tintView.alpha = 0;
     [self.superview insertSubview:_tintView belowSubview:self];
 }
@@ -384,7 +391,7 @@
     [arrowPath moveToPoint: leftPoint];
     [arrowPath addLineToPoint: _touchPoint];
     [arrowPath addLineToPoint: rightPoint];
-    [(_appearance.borderWidth) ? self.appearance.textColor : self.appearance.panelColor setFill];
+    [(_appearance.borderWidth) ? self.appearance.accentColor : self.appearance.panelColor setFill];
     [arrowPath fill];
 }
 
@@ -398,7 +405,16 @@
     self = [super init];
     
     if (self) {
-        
+        self.panelWidth = 100;
+        self.contentHeight = 100;
+        self.cornerRadius = 0;
+        self.borderWidth = 0;
+        self.partitionLineThickness = 1;
+        self.arrowWidth = 20;
+        self.panelColor = [UIColor grayColor];
+        self.textColor = [UIColor whiteColor];
+        self.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.75];
+        self.accentColor = [UIColor darkGrayColor];
     }
     
     return self;

@@ -19,7 +19,7 @@
 
 typedef NS_ENUM(BOOL, CLEquatorPosition) {AboveEquator, BelowEquator};
 typedef NS_ENUM(BOOL, CLHorizontalPosition) {LeftOfCenter, RightOfCenter};
-typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionOverlay};
+typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionOverlay, PopupOverlay};
 
 ///Protocol Definition
 
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 - (void)overlayDidDismissWithFormat:(CLOverlayFormat)format;
 @end
 
-///CLOverlayKit Class Definition
+///CLOverlayKit Class Interface
 
 @interface CLOverlayKit : UIView
 
@@ -39,14 +39,15 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 +(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
 +(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
 +(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
++(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
 
 @end
 
-///CLOverlayAppearance Class Definition
+///CLOverlayAppearance Class Interface
 
 @interface CLOverlayAppearance : NSObject
 
 @property (nonatomic, readwrite) CGFloat panelWidth, contentHeight, cornerRadius, borderWidth, partitionLineThickness, arrowWidth;
-@property (nonatomic, strong)UIColor *panelColor, *textColor, *tintColor;
+@property (nonatomic, strong) UIColor *panelColor, *textColor, *tintColor, *accentColor;
 
 @end
