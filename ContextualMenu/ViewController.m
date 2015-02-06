@@ -8,8 +8,8 @@
 #import "ViewController.h"
 #import "CLOverlayKit.h"
 
-#define CORNER_RADIUS 8
-#define PRIMARY_CGCOLOR CGColorCreateGenericRGB(0.000, 0.255, 0.494, 1)
+#define CORNER_RADIUS 4
+#define PRIMARY_COLOR [UIColor colorWithRed:0.043 green:0.349 blue:0.624 alpha:1]
 
 @interface ViewController () <CLOverlayKitDelegate>
 @property (nonatomic, strong) CLOverlayAppearance *appearance;
@@ -27,16 +27,15 @@
     _appearance.borderWidth = 0;
     _appearance.cornerRadius = CORNER_RADIUS;
     _appearance.contentHeight = self.view.bounds.size.height*.08;
-    _appearance.panelColor = [UIColor yellowColor];
-    _appearance.panelWidth = self.view.bounds.size.width*.5;
-    _appearance.textColor = [UIColor blackColor];
-    _appearance.arrowWidth = self.view.bounds.size.width*.08;
+    _appearance.panelColor = PRIMARY_COLOR;
+    _appearance.panelWidth = self.view.bounds.size.width*.6;
+    _appearance.textColor = [UIColor whiteColor];
+    _appearance.arrowWidth = self.view.bounds.size.width*.1;
     _appearance.partitionLineThickness = 1;
-    _appearance.tintColor = [UIColor blackColor];
+    _appearance.tintColor = [UIColor whiteColor];
     
-    NSLog(@"HELLO: %f", _appearance.contentHeight);
-
     [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
+    
     [self composeInterface];
 }
 
@@ -134,10 +133,10 @@
     //Compose new button
     UIButton *styledButton; {
         styledButton = [[UIButton  alloc] initWithFrame:frame];
-        styledButton.backgroundColor = [UIColor yellowColor];
+        styledButton.backgroundColor = PRIMARY_COLOR;
         styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.25];
         [styledButton setTitle:title forState:UIControlStateNormal];
-        [styledButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         styledButton.layer.cornerRadius = CORNER_RADIUS;
         styledButton.clipsToBounds = YES;
         styledButton.transform = CGAffineTransformMakeScale(.8, .8);

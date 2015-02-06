@@ -19,14 +19,14 @@
 @property (nonatomic, readwrite) CLOverlayFormat format;
 @end
 
+///CLOverlayKit Class implementation
+
 @implementation CLOverlayKit
 
 #pragma mark - API Methods
 
 +(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
-    NSLog(@"HELLO: %f", appearance.contentHeight);
-
     CLOverlayKit *menuOverlay = [CLOverlayKit newContextualOverlayInView:view delegate:delegate touchPoint:touchPoint appearance:appearance];
 
     menuOverlay.format = MenuOverlay;
@@ -60,7 +60,6 @@
 #pragma mark - UI Composition
 
 +(CLOverlayKit *)newContextualOverlayInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint appearance:(CLOverlayAppearance *)appearance {
-    NSLog(@"HELLO: %f", appearance.contentHeight);
     
     CLOverlayKit *overlay; {
         
@@ -159,6 +158,7 @@
         headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, panelView.frame.size.width, _appearance.contentHeight)];
         headerLabel.text = headerString;
         headerLabel.textAlignment = NSTextAlignmentCenter;
+        headerLabel.textColor = _appearance.textColor;
         headerLabel.font = [UIFont systemFontOfSize:headerLabel.bounds.size.height*.45];
         [panelView addSubview:headerLabel];
         
@@ -379,6 +379,8 @@
 }
 
 @end
+
+///CLOverlayAppearance Class implementation
 
 @implementation CLOverlayAppearance
 
