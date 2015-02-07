@@ -28,44 +28,40 @@
 +(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *menuOverlay = [CLOverlayKit newOverlayObjectWithFrame:view.frame Delegate:delegate touchPoint:touchPoint appearance:appearance];
-
+    [view addSubview:menuOverlay];
     menuOverlay.format = MenuOverlay;
     [menuOverlay applyTintToSuperview];
     [menuOverlay composeMenuPanelWithStrings:strings];
-    [view addSubview:menuOverlay];
     [menuOverlay animateOverlayAppearance];
 }
 
 +(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *descriptionOverlay = [CLOverlayKit newOverlayObjectWithFrame:view.frame Delegate:delegate touchPoint:touchPoint appearance:appearance];
-    
+    [view addSubview:descriptionOverlay];
     descriptionOverlay.format = DescriptionOverlay;
     [descriptionOverlay applyTintToSuperview];
     [descriptionOverlay composeDescriptionPanelWithBodyString:bodyString andHeaderString:headerString];
-    [view addSubview:descriptionOverlay];
     [descriptionOverlay animateOverlayAppearance];
 }
 
 +(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *sideMenu = [CLOverlayKit newOverlayObjectWithFrame:view.frame Delegate:delegate touchPoint:touchPoint appearance:appearance];
-    
+    [view addSubview:sideMenu];
     sideMenu.format = SideMenu;
     [sideMenu composeSideMenuPanelWithStrings:strings];
-    [view addSubview:sideMenu];
     [sideMenu animateSideMenuAppearance];
 }
 
 +(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance {
     
     CLOverlayKit *descriptionOverlay = [CLOverlayKit newOverlayObjectWithFrame:view.frame Delegate:delegate touchPoint:CGPointZero appearance:appearance];
-    
+    [view addSubview:descriptionOverlay];
     descriptionOverlay.format = PopupOverlay;
     [descriptionOverlay applyTintToSuperview];
     [descriptionOverlay composeDescriptionPanelWithBodyString:bodyString andHeaderString:headerString];
     descriptionOverlay.panelView.center = view.center;
-    [view addSubview:descriptionOverlay];
     [descriptionOverlay animateOverlayAppearance];
 }
 
@@ -101,8 +97,9 @@
     for (NSInteger index = 0; index < strings.count; index++) {
         
         //Compose UIButton
-        UIButton *button; {
-            button = [[UIButton alloc] initWithFrame:(CGRect){0,verticalOffset, buttonSize}];
+        UIButton *button = [[UIButton alloc] initWithFrame:(CGRect){0,verticalOffset, buttonSize}];
+        
+        if (button) {
             [button setTitle:[strings objectAtIndex:index] forState:UIControlStateNormal];
             [button setTitleColor:self.appearance.textColor forState:UIControlStateNormal];
             [button addTarget:self action:@selector(onTapMenuItem:) forControlEvents:UIControlEventTouchUpInside];
@@ -121,10 +118,9 @@
 
 -(void)addPartitionLineToBottonOfView:(UIView *)view {
 
-    //Add partition line to button
-    UIView *partitionLine; {
-        
-        partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-_appearance.partitionLineThickness, view.frame.size.width*.9, _appearance.partitionLineThickness)];
+    UIView *partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-_appearance.partitionLineThickness, view.frame.size.width*.9, _appearance.partitionLineThickness)];
+    
+    if (partitionLine) {
         partitionLine.center = CGPointMake(view.center.x, partitionLine.center.y);
         partitionLine.backgroundColor = _appearance.accentColor;
         partitionLine.layer.cornerRadius = partitionLine.bounds.size.height/2;
@@ -135,17 +131,16 @@
 
 -(UIView *)composePanelViewWithSize:(CGSize)size {
 
-    UIView *panelView;
+    UIView *panelView = [[UIView alloc] initWithFrame:(CGRect){0,0, size}];
     
-    //Calculate panel height for string quantity
-    CGSize panelSize                = size;
-    panelView                       = [[UIView alloc] initWithFrame:(CGRect){0,0, panelSize}];
-    panelView.center                = _touchPoint;
-    panelView.frame                 = [self adjustFrameForPosition:panelView.frame];
-    panelView.backgroundColor       = _appearance.primaryColor;
-    panelView.layer.cornerRadius    = _appearance.cornerRadius;
-    panelView.layer.borderWidth     = _appearance.borderWidth;
-    panelView.layer.borderColor     = _appearance.accentColor.CGColor;
+    if (panelView) {
+        panelView.center = _touchPoint;
+        panelView.frame = [self adjustFrameForPosition:panelView.frame];
+        panelView.backgroundColor = _appearance.primaryColor;
+        panelView.layer.cornerRadius = _appearance.cornerRadius;
+        panelView.layer.borderWidth = _appearance.borderWidth;
+        panelView.layer.borderColor = _appearance.accentColor.CGColor;
+    }
         
     return panelView;
 }
@@ -164,35 +159,40 @@
 
 -(void)composeDescriptionPanelWithBodyString:(NSString*)text andHeaderString:(NSString *)headerString{
     
+    //Determine panel width
+    CGFloat panelWidth = _appearance.contextualOverayWidth;
+    if (_format == PopupOverlay) panelWidth = self.frame.size.width*.95;
+    
     //Compose panel view
-    UIView *panelView = [self composePanelViewWithSize:CGSizeMake(_appearance.contextualOverayWidth, _appearance.contextualOverlayItemHeight*7)];
+    UIView *panelView = [self composePanelViewWithSize:CGSizeMake(panelWidth, _appearance.contextualOverlayItemHeight*7)];
     [self addSubview:panelView];
     
     //Retain strong reference to panel view object
     _panelView = panelView;
     
-    UILabel *headerLabel; {
-        headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, panelView.frame.size.width, _appearance.contextualOverlayItemHeight)];
+    //Compose Header Label
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, panelView.frame.size.width, _appearance.contextualOverlayItemHeight)];
+    if (headerLabel) {
         headerLabel.text = headerString;
         headerLabel.textAlignment = NSTextAlignmentCenter;
         headerLabel.textColor = _appearance.textColor;
         headerLabel.font = [UIFont systemFontOfSize:headerLabel.bounds.size.height*.45];
         [panelView addSubview:headerLabel];
-        
         [self addPartitionLineToBottonOfView:headerLabel];
     }
     
-    UIView *descriptionContainerView; {
-        descriptionContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, headerLabel.bounds.size.height, panelView.bounds.size.width, panelView.bounds.size.height-headerLabel.bounds.size.height)];
+    //Compose Decription Container view
+    UIView *descriptionContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, headerLabel.bounds.size.height, panelView.bounds.size.width, panelView.bounds.size.height-headerLabel.bounds.size.height)];
+    if (descriptionContainerView) {
+        
         [panelView addSubview:descriptionContainerView];
         
-        UILabel *descriptionLabel; {
-            
-            CGRect frame = CGRectMake(descriptionContainerView.bounds.size.width*.05, 0, descriptionContainerView.bounds.size.width*.9, descriptionContainerView.bounds.size.height);
-            descriptionLabel                = [[UILabel alloc] initWithFrame:frame];
-            descriptionLabel.text           = text;
-            descriptionLabel.textColor      = _appearance.textColor;
-            descriptionLabel.numberOfLines  = 0;
+        CGRect descriptionLabelFrame = CGRectMake(descriptionContainerView.bounds.size.width*.05, 0, descriptionContainerView.bounds.size.width*.9, descriptionContainerView.bounds.size.height);
+        UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:descriptionLabelFrame];
+        if (descriptionLabel) {
+            descriptionLabel.text = text;
+            descriptionLabel.textColor = _appearance.textColor;
+            descriptionLabel.numberOfLines = 0;
             [descriptionLabel sizeThatFits:descriptionContainerView.frame.size];
             [descriptionLabel setAdjustsFontSizeToFitWidth:YES];
             [descriptionContainerView addSubview:descriptionLabel];
@@ -246,7 +246,6 @@
     
     _tintView = [[UIView alloc] initWithFrame:self.superview.frame];
     _tintView.backgroundColor = _appearance.tintColor;
-    _tintView.alpha = 0;
     [self.superview insertSubview:_tintView belowSubview:self];
 }
 
@@ -263,8 +262,8 @@
     for (screenshotTintView in screenShot.subviews) if ([screenshotTintView isKindOfClass:[UIView class]]) break;
     
     //Set destination points
-    CGPoint screenShotDestination   = screenShot.center;
-    CGPoint sideMenuDestination     = _panelView.center;
+    CGPoint screenShotDestination = screenShot.center;
+    CGPoint sideMenuDestination = _panelView.center;
     
     //Set starting states for menu elements
     screenShot.frame = self.frame;
@@ -308,8 +307,8 @@
 -(void)animateOverlayAppearance
 {
     // Animate Menu Appearance
-    self.alpha      = 0;
-    self.hidden     = NO;
+    self.alpha = 0;
+    self.hidden = NO;
     _tintView.alpha = 0;
 
     [UIView animateWithDuration:OVERLAY_ANIMATION_SPEED animations:^{
@@ -326,7 +325,7 @@
     
     else {
         [UIView animateWithDuration:OVERLAY_ANIMATION_SPEED animations:^{
-            self.alpha      = 0;
+            self.alpha = 0;
             _tintView.alpha = 0;
         } completion:^(BOOL finished) {
             [_tintView removeFromSuperview];
@@ -419,9 +418,9 @@
         self.cornerRadius = 3;
         self.borderWidth = 0;
         self.partitionLineThickness = 1;
-        self.primaryColor = [UIColor whiteColor];
-        self.accentColor = [UIColor grayColor];
-        self.textColor = [[UIColor blackColor] colorWithAlphaComponent:.9];
+        self.primaryColor = [UIColor colorWithRed:0.890 green:0.404 blue:0.118 alpha:1];
+        self.accentColor = [UIColor whiteColor];
+        self.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
         self.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
     }
     

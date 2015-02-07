@@ -20,11 +20,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
     _appearance = [CLOverlayAppearance new];
-    
-    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
+    if (_appearance) {
+        _appearance.contextualOverayWidth = self.view.bounds.size.width*.6;
+    }
     
     [self composeInterface];
 }
@@ -82,8 +82,10 @@
 
 -(void)composeInterface {
     
+    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
+    
     CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.075);
-    CGSize buttonSize = CGSizeMake(navigationBarSize.width*.25, navigationBarSize.height);
+    CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
     
     //Compose the top navigtion bar
     UIView *topNavigationBar; {
@@ -131,12 +133,9 @@
     //Compose new button
     UIButton *styledButton; {
         styledButton = [[UIButton  alloc] initWithFrame:frame];
-        styledButton.backgroundColor = PRIMARY_COLOR;
-        styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.25];
+        styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.4];
         [styledButton setTitle:title forState:UIControlStateNormal];
         [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        styledButton.layer.cornerRadius = CORNER_RADIUS;
-        styledButton.clipsToBounds = YES;
         styledButton.transform = CGAffineTransformMakeScale(.8, .8);
         
     }
