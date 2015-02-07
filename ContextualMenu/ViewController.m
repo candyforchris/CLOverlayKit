@@ -80,14 +80,14 @@
 
 -(void)composeInterface {
     
-    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor colorWithRed:0.710 green:0.427 blue:0.145 alpha:1]];
+    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor grayColor] color2:[UIColor darkGrayColor]];
     
     CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.075);
     CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
     
     //Compose the top navigtion bar
-    UIView *topNavigationBar; {
-        topNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, 0, navigationBarSize}];
+    UIView *topNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, 0, navigationBarSize}];
+    if (topNavigationBar) {
         topNavigationBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
         [self.view addSubview:topNavigationBar];
         
@@ -99,27 +99,27 @@
     }
     
     //Compose the bottom navigtion bar
-    UIView *bottomNavigationBar; {
-        bottomNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, self.view.bounds.size.height-navigationBarSize.height, navigationBarSize}];
+    UIView *bottomNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, self.view.bounds.size.height-navigationBarSize.height, navigationBarSize}];
+    if (bottomNavigationBar) {
         bottomNavigationBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
         [self.view addSubview:bottomNavigationBar];
         
-        UIButton *policyButton; {
-            policyButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Privacy"];
+        UIButton *policyButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Privacy"];
+        if (policyButton) {
             policyButton.tag = 1;
             [bottomNavigationBar addSubview:policyButton];
         }
         
-        UIButton *aboutUsButton; {
-            aboutUsButton = [self styledButtonWithFrame:(CGRect){bottomNavigationBar.bounds.size.width-buttonSize.width,0, buttonSize} andTitle:@"About Us"];
+        UIButton *aboutUsButton = [self styledButtonWithFrame:(CGRect){bottomNavigationBar.bounds.size.width-buttonSize.width,0, buttonSize} andTitle:@"About Us"];
+        if (aboutUsButton) {
             aboutUsButton.tag = 2;
             [bottomNavigationBar addSubview:aboutUsButton];
         }
     }
     
     //Compose middle button
-    UIButton *middleButton; {
-        middleButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Middle"];
+    UIButton *middleButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Middle"];
+    if (middleButton) {
         middleButton.tag = 2;
         middleButton.center = self.view.center;
         [self.view addSubview:middleButton];
@@ -129,13 +129,12 @@
 -(UIButton *)styledButtonWithFrame:(CGRect)frame andTitle:(NSString *)title {
     
     //Compose new button
-    UIButton *styledButton; {
-        styledButton = [[UIButton  alloc] initWithFrame:frame];
+    UIButton *styledButton = [[UIButton  alloc] initWithFrame:frame];
+    if (styledButton) {
         styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.4];
         [styledButton setTitle:title forState:UIControlStateNormal];
         [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         styledButton.transform = CGAffineTransformMakeScale(.8, .8);
-        
     }
     
     //Add a target to the new button

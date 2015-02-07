@@ -418,7 +418,7 @@
         self.cornerRadius = 3;
         self.borderWidth = 0;
         self.partitionLineThickness = 1;
-        self.primaryColor = [UIColor colorWithRed:0.890 green:0.404 blue:0.118 alpha:1];
+        self.primaryColor = [UIColor grayColor];
         self.accentColor = [UIColor whiteColor];
         self.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
         self.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
