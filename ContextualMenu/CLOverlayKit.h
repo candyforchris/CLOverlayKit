@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 +(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
 +(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
 +(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
-+(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
++(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
 
 @end
 
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 
 @interface CLOverlayAppearance : NSObject
 
-@property (nonatomic, readwrite) CGFloat panelWidth, contentHeight, cornerRadius, borderWidth, partitionLineThickness, arrowWidth;
-@property (nonatomic, strong) UIColor *panelColor, *textColor, *tintColor, *accentColor;
+@property (nonatomic, readwrite) CGFloat contextualOverayWidth, contextualOverlayItemHeight, cornerRadius, borderWidth, partitionLineThickness, contextualOverlayArrowWidth;
+@property (nonatomic, strong) UIColor *primaryColor, *textColor, *tintColor, *accentColor;
 
 @end

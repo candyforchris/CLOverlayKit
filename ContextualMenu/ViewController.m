@@ -24,17 +24,6 @@
     
     _appearance = [CLOverlayAppearance new];
     
-    _appearance.borderWidth = 3;
-    _appearance.cornerRadius = CORNER_RADIUS;
-    _appearance.contentHeight = self.view.bounds.size.height*.08;
-    _appearance.panelColor = PRIMARY_COLOR;
-    _appearance.panelWidth = self.view.bounds.size.width*.6;
-    _appearance.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
-    _appearance.arrowWidth = self.view.bounds.size.width*.05;
-    _appearance.partitionLineThickness = 2;
-    _appearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.7];
-    _appearance.accentColor = [UIColor colorWithRed:0.282 green:0.510 blue:0.718 alpha:1];
-    
     [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
     
     [self composeInterface];
@@ -71,7 +60,7 @@
 
 #pragma mark - CLOverlayKit Delegate
 -(void)overlayKit:(CLOverlayKit *)overlay itemSelectedAtIndex:(NSInteger)index {
-    //...
+    [CLOverlayKit presentNotificationPopupInView:self.view delegate:self bodyString:@"Bacon ipsum dolor amet kielbasa tail salami shankle picanha bresaola brisket pancetta. Bresaola filet mignon meatloaf pastrami. Tenderloin venison bresaola shoulder. Spare ribs pancetta pork loin swine, picanha capicola doner alcatra rump hamburger cupim meatball. Ham short loin fatback, ham hock prosciutto ground round swine beef ribs strip steak cow turkey t-bone alcatra. Frankfurter flank pork loin ball tip pork short loin, ribeye boudin landjaeger leberkas biltong salami hamburger shankle sirloin. Ribeye t-bone shank pork belly turkey rump. Shoulder meatloaf t-bone kielbasa, pancetta shankle corned beef sausage drumstick. Chicken turducken shoulder, corned beef chuck sausage kielbasa rump ham hock short loin andouille tenderloin pancetta sirloin. Meatloaf beef ball tip turkey meatball rump." headerString:@"Selection" appearance:_appearance];
 }
 
 -(void)overlayKit:(CLOverlayKit *)overlay didFinishPresentingWithFormat:(CLOverlayFormat)format {
