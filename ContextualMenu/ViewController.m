@@ -8,9 +8,6 @@
 #import "ViewController.h"
 #import "CLOverlayKit.h"
 
-#define CORNER_RADIUS 10
-#define PRIMARY_COLOR [UIColor colorWithRed:0.043 green:0.349 blue:0.624 alpha:1]
-
 @interface ViewController () <CLOverlayKitDelegate>
 @property (nonatomic, strong) CLOverlayAppearance *appearance;
 @end
@@ -24,6 +21,7 @@
     _appearance = [CLOverlayAppearance new];
     if (_appearance) {
         _appearance.contextualOverayWidth = self.view.bounds.size.width*.6;
+        _appearance.cornerRadius = 5;
     }
     
     [self composeInterface];
@@ -82,7 +80,7 @@
 
 -(void)composeInterface {
     
-    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor lightGrayColor]];
+    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor darkGrayColor] color2:[UIColor colorWithRed:0.710 green:0.427 blue:0.145 alpha:1]];
     
     CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.075);
     CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
