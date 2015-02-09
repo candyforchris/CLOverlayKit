@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B1E424E1A890D8400B52AB1 /* Autumn.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1E424D1A890D8400B52AB1 /* Autumn.jpg */; };
+		1B250F7E1A86C54C00C68FFC /* Resources.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B250F7D1A86C54C00C68FFC /* Resources.json */; };
 		1B9F22281A7B11DC000B1725 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F22271A7B11DC000B1725 /* main.m */; };
 		1B9F222B1A7B11DC000B1725 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F222A1A7B11DC000B1725 /* AppDelegate.m */; };
 		1B9F222E1A7B11DC000B1725 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F222D1A7B11DC000B1725 /* ViewController.m */; };
@@ -28,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B1E424D1A890D8400B52AB1 /* Autumn.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Autumn.jpg; sourceTree = "<group>"; };
+		1B250F7D1A86C54C00C68FFC /* Resources.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Resources.json; sourceTree = "<group>"; };
 		1B9F22221A7B11DC000B1725 /* ContextualMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContextualMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B9F22261A7B11DC000B1725 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1B9F22271A7B11DC000B1725 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -101,7 +105,9 @@
 		1B9F22251A7B11DC000B1725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1B1E424D1A890D8400B52AB1 /* Autumn.jpg */,
 				1B9F22261A7B11DC000B1725 /* Info.plist */,
+				1B250F7D1A86C54C00C68FFC /* Resources.json */,
 				1B9F22271A7B11DC000B1725 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -204,8 +210,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B1E424E1A890D8400B52AB1 /* Autumn.jpg in Resources */,
 				1B9F22311A7B11DC000B1725 /* Main.storyboard in Resources */,
 				1B9F22361A7B11DC000B1725 /* LaunchScreen.xib in Resources */,
+				1B250F7E1A86C54C00C68FFC /* Resources.json in Resources */,
 				1B9F22331A7B11DC000B1725 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

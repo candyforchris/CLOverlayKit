@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 
 @interface CLOverlayAppearance : NSObject
 
-@property (nonatomic, readwrite) CGFloat contextualOverayWidth, contextualOverlayItemHeight, cornerRadius, borderWidth, partitionLineThickness, contextualOverlayArrowWidth;
+@property (nonatomic, strong) NSNumber *contextualOverayWidth, *contextualOverlayItemHeight, *cornerRadius, *borderWidth, *partitionLineThickness, *contextualOverlayArrowWidth;
 @property (nonatomic, strong) UIColor *primaryColor, *textColor, *tintColor, *accentColor;
 
 @end

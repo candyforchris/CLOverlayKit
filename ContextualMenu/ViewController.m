@@ -10,6 +10,7 @@
 
 @interface ViewController () <CLOverlayKitDelegate>
 @property (nonatomic, strong) CLOverlayAppearance *appearance;
+@property (nonatomic, strong) NSDictionary *resources;
 @end
 
 
@@ -20,9 +21,23 @@
     
     _appearance = [CLOverlayAppearance new];
     if (_appearance) {
-        _appearance.contextualOverayWidth = self.view.bounds.size.width*.6;
-        _appearance.cornerRadius = 5;
+        _appearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
+        _appearance.cornerRadius = [NSNumber numberWithInt:5];
     }
+    
+    
+    NSError *error = nil;
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Resources" ofType:@"json"]] options:NSJSONReadingAllowFragments error:&error];
+    
+    if ([dictionary isKindOfClass:[NSDictionary class]] && !error) {
+        _resources = [NSDictionary new];
+        _resources = dictionary;
+    }
+    
+    //Set background image
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Autumn.jpg"]];
+    backgroundImage.frame = self.view.frame;
+    [self.view addSubview: backgroundImage];
     
     [self composeInterface];
 }
@@ -39,26 +54,36 @@
             [CLOverlayKit presentContextualDescriptionInView:self.view
                                                     delegate:self
                                                   touchPoint:touchPoint
-                                                  bodyString:@"Bacon ipsum dolor amet kielbasa tail salami shankle picanha bresaola brisket pancetta. Bresaola filet mignon meatloaf pastrami. Tenderloin venison bresaola shoulder. Spare ribs pancetta pork loin swine, picanha capicola doner alcatra rump hamburger cupim meatball. Ham short loin fatback, ham hock prosciutto ground round swine beef ribs strip steak cow turkey t-bone alcatra. Frankfurter flank pork loin ball tip pork short loin, ribeye boudin landjaeger leberkas biltong salami hamburger shankle sirloin. Ribeye t-bone shank pork belly turkey rump. Shoulder meatloaf t-bone kielbasa, pancetta shankle corned beef sausage drumstick. Chicken turducken shoulder, corned beef chuck sausage kielbasa rump ham hock short loin andouille tenderloin pancetta sirloin. Meatloaf beef ball tip turkey meatball rump."
+                                                  bodyString:[_resources objectForKey:@"Lorem Ipsum"]
                                                 headerString:@"Privacy Policy"
                                                   appearance:_appearance];
-            
             break;
             
         case 2:
-            [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"] appearance: _appearance];
+            [CLOverlayKit presentContextualMenuInView:self.view
+                                             delegate:self
+                                           touchPoint:touchPoint
+                                              strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]
+                                           appearance: _appearance];
             break;
             
         case 3:
-            [CLOverlayKit presentSideMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"] appearance:_appearance];
-            
+            [CLOverlayKit presentSideMenuInView:self.view
+                                       delegate:self
+                                     touchPoint:touchPoint
+                                        strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"]
+                                     appearance:_appearance];
             break;
     }
 }
 
 #pragma mark - CLOverlayKit Delegate
 -(void)overlayKit:(CLOverlayKit *)overlay itemSelectedAtIndex:(NSInteger)index {
-    [CLOverlayKit presentNotificationPopupInView:self.view delegate:self bodyString:@"Bacon ipsum dolor amet kielbasa tail salami shankle picanha bresaola brisket pancetta. Bresaola filet mignon meatloaf pastrami. Tenderloin venison bresaola shoulder. Spare ribs pancetta pork loin swine, picanha capicola doner alcatra rump hamburger cupim meatball. Ham short loin fatback, ham hock prosciutto ground round swine beef ribs strip steak cow turkey t-bone alcatra. Frankfurter flank pork loin ball tip pork short loin, ribeye boudin landjaeger leberkas biltong salami hamburger shankle sirloin. Ribeye t-bone shank pork belly turkey rump. Shoulder meatloaf t-bone kielbasa, pancetta shankle corned beef sausage drumstick. Chicken turducken shoulder, corned beef chuck sausage kielbasa rump ham hock short loin andouille tenderloin pancetta sirloin. Meatloaf beef ball tip turkey meatball rump." headerString:@"Selection" appearance:_appearance];
+    [CLOverlayKit presentNotificationPopupInView:self.view
+                                        delegate:self
+                                      bodyString:[_resources objectForKey:@"Lorem Ipsum"]
+                                    headerString:@"Selection"
+                                      appearance:_appearance];
 }
 
 -(void)overlayKit:(CLOverlayKit *)overlay didFinishPresentingWithFormat:(CLOverlayFormat)format {
@@ -86,22 +111,23 @@
     CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
     
     //Compose the top navigtion bar
-    UIView *topNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, 0, navigationBarSize}];
+    UIVisualEffectView *topNavigationBar = [self styledNaviationBarWithFrame:(CGRect){0, 0, navigationBarSize}];
     if (topNavigationBar) {
-        topNavigationBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
+        
         [self.view addSubview:topNavigationBar];
         
-        UIButton *sideMenuButton; {
-            sideMenuButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Side Menu"];
+        //Add side Menu button to navigation bar
+        UIButton *sideMenuButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Side Menu"];
+        if (sideMenuButton) {
             sideMenuButton.tag = 3;
             [topNavigationBar addSubview:sideMenuButton];
         }
     }
     
     //Compose the bottom navigtion bar
-    UIView *bottomNavigationBar = [[UIView alloc] initWithFrame:(CGRect){0, self.view.bounds.size.height-navigationBarSize.height, navigationBarSize}];
+    UIVisualEffectView *bottomNavigationBar = [self styledNaviationBarWithFrame:(CGRect){0, self.view.bounds.size.height-navigationBarSize.height, navigationBarSize}];
     if (bottomNavigationBar) {
-        bottomNavigationBar.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
+        
         [self.view addSubview:bottomNavigationBar];
         
         UIButton *policyButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Privacy"];
@@ -124,17 +150,30 @@
         middleButton.center = self.view.center;
         [self.view addSubview:middleButton];
     }
+
+}
+
+-(UIVisualEffectView *)styledNaviationBarWithFrame:(CGRect)frame {
+    
+    UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+    blurView.frame = frame;
+
+    return blurView;
 }
 
 -(UIButton *)styledButtonWithFrame:(CGRect)frame andTitle:(NSString *)title {
     
     //Compose new button
     UIButton *styledButton = [[UIButton  alloc] initWithFrame:frame];
+    
     if (styledButton) {
         styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.4];
         [styledButton setTitle:title forState:UIControlStateNormal];
-        [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        styledButton.transform = CGAffineTransformMakeScale(.8, .8);
+        [styledButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        styledButton.transform = CGAffineTransformMakeScale(.7, .7);
+        styledButton.layer.cornerRadius = styledButton.frame.size.height/2;
+        styledButton.clipsToBounds = YES;
+        styledButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
     }
     
     //Add a target to the new button
@@ -143,7 +182,7 @@
     return styledButton;
 }
 
--(void)addGradientLayerToView:(UIView *)view atIndex:(int)index color1:(UIColor *)color1 color2:(UIColor *)color2{
+-(void)addGradientLayerToView:(UIView *)view atIndex:(int)index color1:(UIColor *)color1 color2:(UIColor *)color2 {
     //Create grey gradient background
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = view.bounds;
