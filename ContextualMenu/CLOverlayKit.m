@@ -115,7 +115,10 @@
 
 -(void)addPartitionLineToBottonOfView:(UIView *)view {
 
-    UIView *partitionLine = [[UIView alloc] initWithFrame:CGRectMake(0, view.frame.size.height-[CLOverlayAppearance sharedOverlayAppearance].partitionLineThickness.integerValue, view.frame.size.width*.9, [CLOverlayAppearance sharedOverlayAppearance].partitionLineThickness.integerValue)];
+    NSInteger contentMargin = [CLOverlayAppearance sharedOverlayAppearance].contentMargin.integerValue;
+    NSInteger lineThickness = [CLOverlayAppearance sharedOverlayAppearance].partitionLineThickness.integerValue;
+    
+    UIView *partitionLine = [[UIView alloc] initWithFrame:CGRectMake(contentMargin, view.frame.size.height-lineThickness, view.frame.size.width-contentMargin*2, lineThickness)];
     
     if (partitionLine) {
         partitionLine.center = CGPointMake(view.center.x, partitionLine.center.y);
@@ -176,7 +179,9 @@
     }
 
     //Compose Description Label
-    UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, headerLabel.bounds.size.height, _panelView.bounds.size.width, _panelView.bounds.size.height-headerLabel.bounds.size.height)];
+    NSInteger contentMargin = [CLOverlayAppearance sharedOverlayAppearance].contentMargin.integerValue;
+    NSInteger headerMargin = headerLabel.bounds.size.height*1.25;
+    UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(contentMargin, headerMargin, _panelView.bounds.size.width-contentMargin*2, _panelView.bounds.size.height-headerMargin-contentMargin)];
     if (descriptionLabel) {
         descriptionLabel.text = text;
         descriptionLabel.textColor = [CLOverlayAppearance sharedOverlayAppearance].textColor;
@@ -185,11 +190,10 @@
         [descriptionLabel setAdjustsFontSizeToFitWidth:YES];
         [_panelView addSubview:descriptionLabel];
     }
-    
 }
 
 -(void)composeSideMenuPanelWithStrings:(NSArray*)strings {
-    
+        
     //Determine horizontal position
     if (_touchPoint.x > self.frame.size.width/2) _horizontalPosition = RightOfCenter;
     else _horizontalPosition = LeftOfCenter;
@@ -405,15 +409,16 @@
         sharedInstance = [[CLOverlayAppearance alloc] init];
         if (sharedInstance) {
             sharedInstance.contextualOverayWidth = [NSNumber numberWithInteger:200];
-            sharedInstance.contextualOverlayItemHeight = [NSNumber numberWithInteger:40];;
-            sharedInstance.contextualOverlayArrowWidth = [NSNumber numberWithInteger:15];;
+            sharedInstance.contextualOverlayItemHeight = [NSNumber numberWithInteger:40];
+            sharedInstance.contextualOverlayArrowWidth = [NSNumber numberWithInteger:15];
             sharedInstance.cornerRadius = [NSNumber numberWithInteger:3];
             sharedInstance.borderWidth = [NSNumber numberWithInteger:0];;
             sharedInstance.partitionLineThickness = [NSNumber numberWithInteger:1];
             sharedInstance.primaryColor = [UIColor grayColor];
             sharedInstance.accentColor = [UIColor whiteColor];
             sharedInstance.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
-            sharedInstance.tintColor = [[UIColor greenColor] colorWithAlphaComponent:.5];
+            sharedInstance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
+            sharedInstance.contentMargin = [NSNumber numberWithInteger:10];
         }
     });
     return sharedInstance;

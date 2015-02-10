@@ -38,11 +38,12 @@
     CLOverlayAppearance *overlayAppearance = [CLOverlayAppearance sharedOverlayAppearance];
     
     //Override some of the model's default values
-    overlayAppearance.textColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
-    overlayAppearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.7];
-    overlayAppearance.accentColor = [[UIColor blackColor] colorWithAlphaComponent:.1];
-    overlayAppearance.primaryColor = [UIColor colorWithRed:0.898 green:0.459 blue:0.027 alpha:1];
+    overlayAppearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
+    overlayAppearance.accentColor = [UIColor lightGrayColor];
     overlayAppearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
+    overlayAppearance.contextualOverlayItemHeight = [NSNumber numberWithFloat:self.view.bounds.size.height*.08];
+    overlayAppearance.cornerRadius = [NSNumber numberWithFloat:10];
+    overlayAppearance.borderWidth = [NSNumber numberWithFloat:1];
 }
 
 -(void)populateResourcesDictionary {
@@ -114,6 +115,7 @@
     //Set background image
     UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BG.jpg"]];
     backgroundImage.frame = self.view.frame;
+    backgroundImage.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview: backgroundImage];
     
     //Compose the top navigtion bar
@@ -150,22 +152,12 @@
             [bottomNavigationBar addSubview:aboutUsButton];
         }
     }
-    
-    //Compose middle button
-    UIButton *middleButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Middle"];
-    if (middleButton) {
-        middleButton.tag = 2;
-        middleButton.center = self.view.center;
-        [self.view addSubview:middleButton];
-    }
-    
 }
 
 -(UIVisualEffectView *)styledNaviationBarWithFrame:(CGRect)frame {
     
     UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
     blurView.frame = frame;
-    blurView.alpha = .95;
     
     return blurView;
 }

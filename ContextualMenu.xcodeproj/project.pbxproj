@@ -16,7 +16,7 @@
 		1B9F22361A7B11DC000B1725 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B9F22341A7B11DC000B1725 /* LaunchScreen.xib */; };
 		1B9F22421A7B11DC000B1725 /* ContextualMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F22411A7B11DC000B1725 /* ContextualMenuTests.m */; };
 		1B9F224D1A7B1204000B1725 /* CLOverlayKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F224C1A7B1204000B1725 /* CLOverlayKit.m */; };
-		1BA58DC51A89C0B6007E093D /* BG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1BA58DC41A89C0B6007E093D /* BG.jpg */; };
+		1BB35DAC1A8A5E1B00EC69DD /* BG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1BB35DAB1A8A5E1B00EC69DD /* BG.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,7 @@
 		1B9F22411A7B11DC000B1725 /* ContextualMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContextualMenuTests.m; sourceTree = "<group>"; };
 		1B9F224B1A7B1204000B1725 /* CLOverlayKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLOverlayKit.h; sourceTree = "<group>"; };
 		1B9F224C1A7B1204000B1725 /* CLOverlayKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLOverlayKit.m; sourceTree = "<group>"; };
-		1BA58DC41A89C0B6007E093D /* BG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BG.jpg; sourceTree = "<group>"; };
+		1BB35DAB1A8A5E1B00EC69DD /* BG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BG.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +105,7 @@
 		1B9F22251A7B11DC000B1725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1BA58DC41A89C0B6007E093D /* BG.jpg */,
+				1BB35DAB1A8A5E1B00EC69DD /* BG.jpg */,
 				1B9F22261A7B11DC000B1725 /* Info.plist */,
 				1B250F7D1A86C54C00C68FFC /* Resources.json */,
 				1B9F22271A7B11DC000B1725 /* main.m */,
@@ -210,7 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BA58DC51A89C0B6007E093D /* BG.jpg in Resources */,
+				1BB35DAC1A8A5E1B00EC69DD /* BG.jpg in Resources */,
 				1B9F22311A7B11DC000B1725 /* Main.storyboard in Resources */,
 				1B9F22361A7B11DC000B1725 /* LaunchScreen.xib in Resources */,
 				1B250F7E1A86C54C00C68FFC /* Resources.json in Resources */,
