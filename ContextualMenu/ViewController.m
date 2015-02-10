@@ -17,29 +17,39 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
-    _appearance = [CLOverlayAppearance new];
-    if (_appearance) {
-        _appearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
-        _appearance.cornerRadius = [NSNumber numberWithInt:5];
-    }
+    [self customizeCLOverlayAppearance];
     
+    [self populateResourcesDictionary];
     
+    [self composeInterface];
+}
+
+
+- (void)customizeCLOverlayAppearance {
+    
+    /*
+     The look and feel of an overlay presented by 'CLOverlayKit' is determined by the values encapsulated in the 'CLOverlayAppearance' signleton. This model contains default values; overide them to change the appearance of your overlays. Consider the following example:
+     */
+    
+    //Aquire a reference to the 'CLOverlayAppearance' signleton
+    CLOverlayAppearance *overlayAppearance = [CLOverlayAppearance sharedOverlayAppearance];
+    
+    //Override some of the model's default values
+    overlayAppearance.textColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
+    overlayAppearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.7];
+    overlayAppearance.accentColor = [[UIColor blackColor] colorWithAlphaComponent:.1];
+    overlayAppearance.primaryColor = [UIColor colorWithRed:0.898 green:0.459 blue:0.027 alpha:1];
+    overlayAppearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
+}
+
+-(void)populateResourcesDictionary {
     NSError *error = nil;
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Resources" ofType:@"json"]] options:NSJSONReadingAllowFragments error:&error];
     
-    if ([dictionary isKindOfClass:[NSDictionary class]] && !error) {
-        _resources = [NSDictionary new];
-        _resources = dictionary;
-    }
-    
-    //Set background image
-    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Autumn.jpg"]];
-    backgroundImage.frame = self.view.frame;
-    [self.view addSubview: backgroundImage];
-    
-    [self composeInterface];
+    if ([dictionary isKindOfClass:[NSDictionary class]] && !error) _resources = dictionary;
 }
 
 #pragma mark - User Interaction
@@ -55,24 +65,21 @@
                                                     delegate:self
                                                   touchPoint:touchPoint
                                                   bodyString:[_resources objectForKey:@"Lorem Ipsum"]
-                                                headerString:@"Privacy Policy"
-                                                  appearance:_appearance];
+                                                headerString:@"Privacy Policy"];
             break;
             
         case 2:
             [CLOverlayKit presentContextualMenuInView:self.view
                                              delegate:self
                                            touchPoint:touchPoint
-                                              strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]
-                                           appearance: _appearance];
+                                              strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]];
             break;
             
         case 3:
             [CLOverlayKit presentSideMenuInView:self.view
                                        delegate:self
                                      touchPoint:touchPoint
-                                        strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"]
-                                     appearance:_appearance];
+                                        strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"]];
             break;
     }
 }
@@ -82,8 +89,7 @@
     [CLOverlayKit presentNotificationPopupInView:self.view
                                         delegate:self
                                       bodyString:[_resources objectForKey:@"Lorem Ipsum"]
-                                    headerString:@"Selection"
-                                      appearance:_appearance];
+                                    headerString:@"Selection"];
 }
 
 -(void)overlayKit:(CLOverlayKit *)overlay didFinishPresentingWithFormat:(CLOverlayFormat)format {
@@ -105,12 +111,14 @@
 
 -(void)composeInterface {
     
-    [self addGradientLayerToView:self.view atIndex:0 color1:[UIColor grayColor] color2:[UIColor darkGrayColor]];
-    
-    CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.075);
-    CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
+    //Set background image
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"BG.jpg"]];
+    backgroundImage.frame = self.view.frame;
+    [self.view addSubview: backgroundImage];
     
     //Compose the top navigtion bar
+    CGSize navigationBarSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height*.09);
+    CGSize buttonSize = CGSizeMake(navigationBarSize.width*.3, navigationBarSize.height);
     UIVisualEffectView *topNavigationBar = [self styledNaviationBarWithFrame:(CGRect){0, 0, navigationBarSize}];
     if (topNavigationBar) {
         
@@ -150,14 +158,15 @@
         middleButton.center = self.view.center;
         [self.view addSubview:middleButton];
     }
-
+    
 }
 
 -(UIVisualEffectView *)styledNaviationBarWithFrame:(CGRect)frame {
     
     UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
     blurView.frame = frame;
-
+    blurView.alpha = .95;
+    
     return blurView;
 }
 
@@ -167,13 +176,9 @@
     UIButton *styledButton = [[UIButton  alloc] initWithFrame:frame];
     
     if (styledButton) {
-        styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.4];
+        styledButton.titleLabel.font = [UIFont systemFontOfSize:frame.size.height*.3];
         [styledButton setTitle:title forState:UIControlStateNormal];
-        [styledButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        styledButton.transform = CGAffineTransformMakeScale(.7, .7);
-        styledButton.layer.cornerRadius = styledButton.frame.size.height/2;
-        styledButton.clipsToBounds = YES;
-        styledButton.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     
     //Add a target to the new button

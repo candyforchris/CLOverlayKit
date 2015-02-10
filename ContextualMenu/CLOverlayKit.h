@@ -36,17 +36,17 @@ typedef NS_ENUM(NSInteger, CLOverlayFormat) {SideMenu, MenuOverlay, DescriptionO
 
 @property (nonatomic, weak) id<CLOverlayKitDelegate>delegate;
 
-+(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
-+(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
-+(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings appearance:(CLOverlayAppearance *)appearance;
-+(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate bodyString:(NSString*)bodyString headerString:(NSString *)headerString appearance:(CLOverlayAppearance *)appearance;
++(void)presentContextualMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings;
++(void)presentContextualDescriptionInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint bodyString:(NSString*)bodyString headerString:(NSString *)headerString;
++(void)presentSideMenuInView:(UIView *)view delegate:(id)delegate touchPoint:(CGPoint)touchPoint strings:(NSArray*)strings;
++(void)presentNotificationPopupInView:(UIView *)view delegate:(id)delegate bodyString:(NSString*)bodyString headerString:(NSString *)headerString;
 
 @end
 
 ///CLOverlayAppearance Class Interface
 
 @interface CLOverlayAppearance : NSObject
-
++ (CLOverlayAppearance *)sharedOverlayAppearance;
 @property (nonatomic, strong) NSNumber *contextualOverayWidth, *contextualOverlayItemHeight, *cornerRadius, *borderWidth, *partitionLineThickness, *contextualOverlayArrowWidth;
 @property (nonatomic, strong) UIColor *primaryColor, *textColor, *tintColor, *accentColor;
 

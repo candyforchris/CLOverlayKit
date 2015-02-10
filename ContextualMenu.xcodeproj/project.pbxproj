@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B1E424E1A890D8400B52AB1 /* Autumn.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1E424D1A890D8400B52AB1 /* Autumn.jpg */; };
 		1B250F7E1A86C54C00C68FFC /* Resources.json in Resources */ = {isa = PBXBuildFile; fileRef = 1B250F7D1A86C54C00C68FFC /* Resources.json */; };
 		1B9F22281A7B11DC000B1725 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F22271A7B11DC000B1725 /* main.m */; };
 		1B9F222B1A7B11DC000B1725 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F222A1A7B11DC000B1725 /* AppDelegate.m */; };
@@ -17,6 +16,7 @@
 		1B9F22361A7B11DC000B1725 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B9F22341A7B11DC000B1725 /* LaunchScreen.xib */; };
 		1B9F22421A7B11DC000B1725 /* ContextualMenuTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F22411A7B11DC000B1725 /* ContextualMenuTests.m */; };
 		1B9F224D1A7B1204000B1725 /* CLOverlayKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B9F224C1A7B1204000B1725 /* CLOverlayKit.m */; };
+		1BA58DC51A89C0B6007E093D /* BG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1BA58DC41A89C0B6007E093D /* BG.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,7 +30,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1B1E424D1A890D8400B52AB1 /* Autumn.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Autumn.jpg; sourceTree = "<group>"; };
 		1B250F7D1A86C54C00C68FFC /* Resources.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Resources.json; sourceTree = "<group>"; };
 		1B9F22221A7B11DC000B1725 /* ContextualMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContextualMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B9F22261A7B11DC000B1725 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -47,6 +46,7 @@
 		1B9F22411A7B11DC000B1725 /* ContextualMenuTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContextualMenuTests.m; sourceTree = "<group>"; };
 		1B9F224B1A7B1204000B1725 /* CLOverlayKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLOverlayKit.h; sourceTree = "<group>"; };
 		1B9F224C1A7B1204000B1725 /* CLOverlayKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLOverlayKit.m; sourceTree = "<group>"; };
+		1BA58DC41A89C0B6007E093D /* BG.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = BG.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +105,7 @@
 		1B9F22251A7B11DC000B1725 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1B1E424D1A890D8400B52AB1 /* Autumn.jpg */,
+				1BA58DC41A89C0B6007E093D /* BG.jpg */,
 				1B9F22261A7B11DC000B1725 /* Info.plist */,
 				1B250F7D1A86C54C00C68FFC /* Resources.json */,
 				1B9F22271A7B11DC000B1725 /* main.m */,
@@ -210,7 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B1E424E1A890D8400B52AB1 /* Autumn.jpg in Resources */,
+				1BA58DC51A89C0B6007E093D /* BG.jpg in Resources */,
 				1B9F22311A7B11DC000B1725 /* Main.storyboard in Resources */,
 				1B9F22361A7B11DC000B1725 /* LaunchScreen.xib in Resources */,
 				1B250F7E1A86C54C00C68FFC /* Resources.json in Resources */,
