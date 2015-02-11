@@ -38,12 +38,13 @@
     CLOverlayAppearance *overlayAppearance = [CLOverlayAppearance sharedOverlayAppearance];
     
     //Override some of the model's default values
-    overlayAppearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.25];
-    overlayAppearance.accentColor = [UIColor lightGrayColor];
+    overlayAppearance.accentColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
     overlayAppearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
     overlayAppearance.contextualOverlayItemHeight = [NSNumber numberWithFloat:self.view.bounds.size.height*.08];
     overlayAppearance.cornerRadius = [NSNumber numberWithFloat:10];
     overlayAppearance.borderWidth = [NSNumber numberWithFloat:1];
+    overlayAppearance.textColor = [UIColor blackColor];
+    overlayAppearance.contextualOverlayArrowWidth = [NSNumber numberWithInteger:50];
 }
 
 -(void)populateResourcesDictionary {
@@ -55,42 +56,36 @@
 
 #pragma mark - User Interaction
 
-- (void)onTapButton:(id)sender {
+-(void)onTapSideMenu:(id)sender {
+    
     UIButton *button = sender;
-    
     CGPoint touchPoint = [self.view convertPoint:button.center fromView:button.superview];
-    
-    switch (button.tag) {
-        case 1:
-            [CLOverlayKit presentContextualDescriptionInView:self.view
-                                                    delegate:self
-                                                  touchPoint:touchPoint
-                                                  bodyString:[_resources objectForKey:@"Lorem Ipsum"]
-                                                headerString:@"Privacy Policy"];
-            break;
-            
-        case 2:
-            [CLOverlayKit presentContextualMenuInView:self.view
-                                             delegate:self
-                                           touchPoint:touchPoint
-                                              strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]];
-            break;
-            
-        case 3:
-            [CLOverlayKit presentSideMenuInView:self.view
-                                       delegate:self
-                                     touchPoint:touchPoint
-                                        strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"]];
-            break;
-    }
+
+    [CLOverlayKit presentSideMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Menu's have things!", @"It's sweet to be a menu", @"Menus Schmenus"]];
+
 }
 
+-(void)onTapPrivacyPolicy:(id)sender {
+    
+    UIButton *button = sender;
+    CGPoint touchPoint = [self.view convertPoint:button.center fromView:button.superview];
+    
+    [CLOverlayKit presentContextualDescriptionInView:self.view delegate:self touchPoint:touchPoint bodyString:[_resources objectForKey:@"Lorem Ipsum"] headerString:@"Privacy Policy"];
+}
+
+-(void)onTapAboutUs:(id)sender {
+    
+    UIButton *button = sender;
+    CGPoint touchPoint = [self.view convertPoint:button.center fromView:button.superview];
+
+    [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]];
+}
+
+
 #pragma mark - CLOverlayKit Delegate
+
 -(void)overlayKit:(CLOverlayKit *)overlay itemSelectedAtIndex:(NSInteger)index {
-    [CLOverlayKit presentNotificationPopupInView:self.view
-                                        delegate:self
-                                      bodyString:[_resources objectForKey:@"Lorem Ipsum"]
-                                    headerString:@"Selection"];
+    [CLOverlayKit presentNotificationPopupInView:self.view delegate:self bodyString:[_resources objectForKey:@"Lorem Ipsum"] headerString:@"Selection"];
 }
 
 -(void)overlayKit:(CLOverlayKit *)overlay didFinishPresentingWithFormat:(CLOverlayFormat)format {
@@ -129,7 +124,7 @@
         //Add side Menu button to navigation bar
         UIButton *sideMenuButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Side Menu"];
         if (sideMenuButton) {
-            sideMenuButton.tag = 3;
+            [sideMenuButton addTarget:self action:@selector(onTapSideMenu:) forControlEvents:UIControlEventTouchUpInside];
             [topNavigationBar addSubview:sideMenuButton];
         }
     }
@@ -142,13 +137,13 @@
         
         UIButton *policyButton = [self styledButtonWithFrame:(CGRect){0,0, buttonSize} andTitle:@"Privacy"];
         if (policyButton) {
-            policyButton.tag = 1;
+            [policyButton addTarget:self action:@selector(onTapPrivacyPolicy:) forControlEvents:UIControlEventTouchUpInside];
             [bottomNavigationBar addSubview:policyButton];
         }
         
         UIButton *aboutUsButton = [self styledButtonWithFrame:(CGRect){bottomNavigationBar.bounds.size.width-buttonSize.width,0, buttonSize} andTitle:@"About Us"];
         if (aboutUsButton) {
-            aboutUsButton.tag = 2;
+            [aboutUsButton addTarget:self action:@selector(onTapAboutUs:) forControlEvents:UIControlEventTouchUpInside];
             [bottomNavigationBar addSubview:aboutUsButton];
         }
     }
@@ -172,9 +167,6 @@
         [styledButton setTitle:title forState:UIControlStateNormal];
         [styledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
-    
-    //Add a target to the new button
-    [styledButton addTarget:self action:@selector(onTapButton:) forControlEvents:UIControlEventTouchUpInside];
     
     return styledButton;
 }

@@ -129,17 +129,19 @@
     }
 }
 
--(UIView *)composePanelViewWithSize:(CGSize)size {
+-(UIVisualEffectView *)composePanelViewWithSize:(CGSize)size {
 
-    UIView *panelView = [[UIView alloc] initWithFrame:(CGRect){0,0, size}];
+    UIVisualEffectView *panelView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+    panelView.frame = (CGRect){0,0,size};
     
     if (panelView) {
         panelView.center = _touchPoint;
         panelView.frame = [self adjustFrameForPosition:panelView.frame];
-        panelView.backgroundColor = [CLOverlayAppearance sharedOverlayAppearance].primaryColor;
+//        panelView.backgroundColor = [CLOverlayAppearance sharedOverlayAppearance].primaryColor;
         panelView.layer.cornerRadius = [CLOverlayAppearance sharedOverlayAppearance].cornerRadius.floatValue;
         panelView.layer.borderWidth = [CLOverlayAppearance sharedOverlayAppearance].borderWidth.integerValue;
         panelView.layer.borderColor = [CLOverlayAppearance sharedOverlayAppearance].accentColor.CGColor;
+        panelView.clipsToBounds = YES;
     }
         
     return panelView;
@@ -148,8 +150,8 @@
 -(void)composeMenuPanelWithStrings:(NSArray *)strings {
     
     //Compose panel view
-    UIView *panelView = [self composePanelViewWithSize:CGSizeMake([CLOverlayAppearance sharedOverlayAppearance].contextualOverayWidth.integerValue, [CLOverlayAppearance sharedOverlayAppearance].contextualOverlayItemHeight.floatValue*strings.count)];
-    [self addSubview:panelView];
+    UIVisualEffectView *panelView = [self composePanelViewWithSize:CGSizeMake([CLOverlayAppearance sharedOverlayAppearance].contextualOverayWidth.integerValue, [CLOverlayAppearance sharedOverlayAppearance].contextualOverlayItemHeight.floatValue*strings.count)];
+    [self.superview addSubview:panelView];
     
     //Retain strong reference to panel view object
     _panelView = panelView;
@@ -165,7 +167,7 @@
     
     //Compose Panel View
     _panelView = [self composePanelViewWithSize:CGSizeMake(panelWidth, [CLOverlayAppearance sharedOverlayAppearance].contextualOverlayItemHeight.integerValue*7)];
-    [self addSubview:_panelView];
+    [self.superview addSubview:_panelView];
     
     //Compose Header Label
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _panelView.frame.size.width, [CLOverlayAppearance sharedOverlayAppearance].contextualOverlayItemHeight.integerValue)];
@@ -234,7 +236,6 @@
 }
 
 -(void)applyTintToSuperview {
-    
     _tintView = [[UIView alloc] initWithFrame:self.superview.frame];
     _tintView.backgroundColor = [CLOverlayAppearance sharedOverlayAppearance].tintColor;
     [self.superview insertSubview:_tintView belowSubview:self];
@@ -300,11 +301,13 @@
     // Animate Menu Appearance
     self.alpha = 0;
     self.hidden = NO;
+    _panelView.alpha = 0;
     _tintView.alpha = 0;
-
+    
     [UIView animateWithDuration:OVERLAY_ANIMATION_SPEED animations:^{
         self.alpha = 1;
         _tintView.alpha = 1;
+        _panelView.alpha = 1;
     } completion:^(BOOL finished) {
         if (self.delegate) [self.delegate overlayKit:self didFinishPresentingWithFormat:_format];
     }];
@@ -312,7 +315,9 @@
 
 -(void)animateOverlayDismissal
 {
+    
     [UIView animateWithDuration:OVERLAY_ANIMATION_SPEED animations:^{
+        self.panelView.alpha = 0;
         self.alpha = 0;
         _tintView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -383,9 +388,11 @@
     CGPoint leftPoint = CGPointMake(self.panelView.center.x+[CLOverlayAppearance sharedOverlayAppearance].contextualOverlayArrowWidth.integerValue, self.panelView.frame.origin.y+verticalOffset);
     CGPoint rightPoint = CGPointMake(self.panelView.center.x-[CLOverlayAppearance sharedOverlayAppearance].contextualOverlayArrowWidth.integerValue, self.panelView.frame.origin.y+verticalOffset);
     
+    /*
     //Adjust points for excessive angle cases
     if (_touchPoint.x > leftPoint.x) leftPoint.y = _panelView.center.y;
     else if (_touchPoint.x < rightPoint.x) rightPoint.y = _panelView.center.y;
+    */
     
     //Draw arrow Bezier Path
     UIBezierPath* arrowPath = UIBezierPath.bezierPath;
@@ -414,11 +421,12 @@
             sharedInstance.cornerRadius = [NSNumber numberWithInteger:3];
             sharedInstance.borderWidth = [NSNumber numberWithInteger:0];;
             sharedInstance.partitionLineThickness = [NSNumber numberWithInteger:1];
-            sharedInstance.primaryColor = [UIColor grayColor];
+            sharedInstance.primaryColor = [UIColor darkGrayColor];
             sharedInstance.accentColor = [UIColor whiteColor];
             sharedInstance.textColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
-            sharedInstance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
+            sharedInstance.tintColor = [UIColor clearColor];
             sharedInstance.contentMargin = [NSNumber numberWithInteger:10];
+            sharedInstance.popUpSize = CGSizeMake(300, 200);
         }
     });
     return sharedInstance;
