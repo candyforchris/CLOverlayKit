@@ -131,7 +131,7 @@
 
 -(UIVisualEffectView *)composePanelViewWithSize:(CGSize)size {
 
-    UIVisualEffectView *panelView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+    UIVisualEffectView *panelView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
     panelView.frame = (CGRect){0,0,size};
     
     if (panelView) {

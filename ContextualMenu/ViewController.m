@@ -38,13 +38,15 @@
     CLOverlayAppearance *overlayAppearance = [CLOverlayAppearance sharedOverlayAppearance];
     
     //Override some of the model's default values
-    overlayAppearance.accentColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
+    overlayAppearance.accentColor = [[UIColor lightGrayColor] colorWithAlphaComponent:1];
     overlayAppearance.contextualOverayWidth = [NSNumber numberWithFloat:self.view.bounds.size.width*.6];
-    overlayAppearance.contextualOverlayItemHeight = [NSNumber numberWithFloat:self.view.bounds.size.height*.08];
+    overlayAppearance.contextualOverlayItemHeight = [NSNumber numberWithFloat:self.view.bounds.size.height*.06];
     overlayAppearance.cornerRadius = [NSNumber numberWithFloat:10];
-    overlayAppearance.borderWidth = [NSNumber numberWithFloat:1];
+    overlayAppearance.borderWidth = [NSNumber numberWithFloat:2];
+    overlayAppearance.primaryColor = [UIColor whiteColor];
+    overlayAppearance.tintColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
     overlayAppearance.textColor = [UIColor blackColor];
-    overlayAppearance.contextualOverlayArrowWidth = [NSNumber numberWithInteger:50];
+    overlayAppearance.contextualOverlayArrowWidth = [NSNumber numberWithInteger:25];
 }
 
 -(void)populateResourcesDictionary {
@@ -78,7 +80,7 @@
     UIButton *button = sender;
     CGPoint touchPoint = [self.view convertPoint:button.center fromView:button.superview];
 
-    [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"Items for my menu", @"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]];
+    [CLOverlayKit presentContextualMenuInView:self.view delegate:self touchPoint:touchPoint strings:@[@"\"Etu menu?\"", @"Menus are clicky lists", @"\"I think, therfore I menu\"", @"Items for my menu"]];
 }
 
 
