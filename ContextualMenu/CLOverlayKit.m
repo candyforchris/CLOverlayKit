@@ -322,7 +322,6 @@
         _tintView.alpha = 0;
     } completion:^(BOOL finished) {
         [_tintView removeFromSuperview];
-        [_panelView removeFromSuperview];
         if (self.delegate) [self.delegate overlayDidDismissWithFormat:_format];
         [self removeFromSuperview];
     }];
